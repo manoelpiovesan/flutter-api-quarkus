@@ -20,31 +20,43 @@ class _CarCreateFormViewState extends State<CarCreateFormView> {
       appBar: AppBar(
         title: const Text('Novo carro'),
       ),
-      body: Column(children: [
-        TextFormField(
-          controller: marcaController,
-          decoration: const InputDecoration(labelText: 'Marca'),
+      body: Center(
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SizedBox(
+              width: 800,
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                TextFormField(
+                  controller: marcaController,
+                  decoration: const InputDecoration(labelText: 'Marca'),
+                ),
+                TextFormField(
+                  controller: nomeController,
+                  decoration: const InputDecoration(labelText: 'Nome'),
+                ),
+                TextFormField(
+                  controller: anoController,
+                  decoration: const InputDecoration(labelText: 'Ano'),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    await carController.createCarro(
+                      marca: marcaController.text,
+                      nome: nomeController.text,
+                      ano: int.parse(anoController.text),
+                    );
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Criar'),
+                ),
+              ]),
+            ),
+          ),
         ),
-        TextFormField(
-          controller: nomeController,
-          decoration: const InputDecoration(labelText: 'Nome'),
-        ),
-        TextFormField(
-          controller: anoController,
-          decoration: const InputDecoration(labelText: 'Ano'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            await carController.createCarro(
-              marca: marcaController.text,
-              nome: nomeController.text,
-              ano: int.parse(anoController.text),
-            );
-            Navigator.of(context).pop();
-          },
-          child: const Text('Criar'),
-        ),
-      ]),
+      ),
     );
   }
 }

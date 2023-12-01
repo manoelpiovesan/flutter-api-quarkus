@@ -32,6 +32,11 @@ class _CarListViewState extends State<CarListView> {
           title: const Text('Carros'),
           actions: [
             IconButton(onPressed: createCarro, icon: const Icon(Icons.add)),
+            IconButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                icon: const Icon(Icons.refresh))
           ],
         ),
         body: FutureBuilder(
@@ -39,33 +44,47 @@ class _CarListViewState extends State<CarListView> {
             builder: (ctx, snapshot) {
               if (snapshot.hasData) {
                 var carros = snapshot.data as List<Carro>;
-                return ListView.builder(
-                    itemCount: carros.length,
-                    itemBuilder: (ctx, index) {
-                      var carro = carros[index];
-                      return ListTile(
-                        title: Row(
-                          mainAxisSize: MainAxisSize.min,
+                return carros.isEmpty
+                    ? const Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(carro.marca),
-                            const SizedBox(width: 5),
-                            Text(carro.nome),
+                            Icon(Icons.sentiment_dissatisfied),
+                            SizedBox(width: 5),
+                            Text('Nenhum carro cadastrado'),
                           ],
                         ),
-                        subtitle: Text(carro.ano.toString()),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                                onPressed: () async {
-                                  await carController.deleteCarro(carro.id);
-                                  setState(() {});
-                                },
-                                icon: const Icon(Icons.delete))
-                          ],
-                        ),
-                      );
-                    });
+                      )
+                    : ListView.builder(
+                        itemCount: carros.length,
+                        itemBuilder: (ctx, index) {
+                          var carro = carros[index];
+                          return Card(
+                            child: ListTile(
+                              title: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(carro.marca),
+                                  const SizedBox(width: 5),
+                                  Text(carro.nome),
+                                ],
+                              ),
+                              subtitle: Text(carro.ano.toString()),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                      onPressed: () async {
+                                        await carController
+                                            .deleteCarro(carro.id);
+                                        setState(() {});
+                                      },
+                                      icon: const Icon(Icons.delete))
+                                ],
+                              ),
+                            ),
+                          );
+                        });
               } else if (snapshot.hasError) {
                 return Center(child: Text(snapshot.error.toString()));
               } else {
