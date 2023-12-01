@@ -73,11 +73,20 @@ class CarroController {
   }
 
   // create
-  Future<void> createCarro(Carro carro) async {
+  Future<void> createCarro(
+      {required String nome, required String marca, required int ano}) async {
     var url = Uri.parse('http://localhost:8080/carro');
-    var response = await http.post(url, body: jsonEncode(carro.toJson()));
+    var response = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'nome': nome,
+          'marca': marca,
+          'ano': ano,
+        }));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 204) {
       return;
     } else {
       throw Exception('Falha ao criar carro');

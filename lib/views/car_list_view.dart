@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quarkus_api_front/controllers/car_controller.dart';
 import 'package:quarkus_api_front/models/car_model.dart';
+import 'package:quarkus_api_front/views/car_create_form_view.dart';
 
 class CarListView extends StatefulWidget {
   const CarListView({super.key});
@@ -18,11 +19,20 @@ class _CarListViewState extends State<CarListView> {
     super.initState();
   }
 
+  Future<void> createCarro() async {
+    await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const CarCreateFormView()));
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Carros'),
+          actions: [
+            IconButton(onPressed: createCarro, icon: const Icon(Icons.add)),
+          ],
         ),
         body: FutureBuilder(
             future: carController.getCarros(),
