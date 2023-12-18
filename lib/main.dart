@@ -1,10 +1,8 @@
-import 'package:dotenv/dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:quarkus_api_front/views/login_view.dart';
 
 
 void main() {
-  var env = DotEnv(includePlatformEnvironment: true)..load();
 
   runApp(const MyApp());
 }

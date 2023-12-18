@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dotenv/dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:quarkus_api_front/controllers/authentication.dart';
 import 'package:quarkus_api_front/models/car_model.dart';
@@ -6,16 +7,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CarroController {
   Authentication authentication = Authentication();
+  DotEnv env = DotEnv(includePlatformEnvironment: true)..load();
 
   Future<List<Carro>> getCarros() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-
-    Uri url = Uri.parse('http://localhost:8080/carro/protected');
-    http.Response response = await http.get(url, headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${prefs.getString('token')}',
-    },);
+    Uri url = Uri.parse('${env['QUARKUS_API_URL']}/carro/protected');
+    http.Response response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${prefs.getString('token')}',
+      },
+    );
 
     if (response.statusCode == 200 ||
         response.statusCode == 204 ||
@@ -35,11 +39,14 @@ class CarroController {
 
   Future<Carro> getCarro(int id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Uri url = Uri.parse('http://localhost:8080/carro/$id');
-    http.Response response = await http.get(url, headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${prefs.getString('token')}',
-    },);
+    Uri url = Uri.parse('${env['QUARKUS_API_URL']}/carro/$id');
+    http.Response response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${prefs.getString('token')}',
+      },
+    );
 
     if (response.statusCode == 200) {
       String json = response.body;
@@ -51,7 +58,7 @@ class CarroController {
   }
 
   Future<int> countCarros() async {
-    Uri url = Uri.parse('http://localhost:8080/carro/count');
+    Uri url = Uri.parse('${env['QUARKUS_API_URL']}/carro/count');
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -66,11 +73,14 @@ class CarroController {
   // delete
   Future<void> deleteCarro(int id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Uri url = Uri.parse('http://localhost:8080/carro/$id');
-    http.Response response = await http.delete(url, headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${prefs.getString('token')}',
-    },);
+    Uri url = Uri.parse('${env['QUARKUS_API_URL']}/carro/$id');
+    http.Response response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${prefs.getString('token')}',
+      },
+    );
 
     if (response.statusCode == 200 || response.statusCode == 204) {
       return;
@@ -83,13 +93,15 @@ class CarroController {
   Future<void> updateCarro(Carro carro) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    Uri url = Uri.parse('http://localhost:8080/carro/${carro.id}');
-    http.Response response = await http.put(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${prefs.getString('token')}',
-        },
-        body: jsonEncode(carro.toJson()),);
+    Uri url = Uri.parse('${env['QUARKUS_API_URL']}/carro/${carro.id}');
+    http.Response response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${prefs.getString('token')}',
+      },
+      body: jsonEncode(carro.toJson()),
+    );
 
     if (response.statusCode == 200 ||
         response.statusCode == 204 ||
@@ -104,13 +116,15 @@ class CarroController {
   Future<void> createCarro(Carro carro) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    Uri url = Uri.parse('http://localhost:8080/carro/protected');
-    http.Response response = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${prefs.getString('token')}',
-        },
-        body: json.encode(carro.toJson()),);
+    Uri url = Uri.parse('${env['QUARKUS_API_URL']}/carro/protected');
+    http.Response response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${prefs.getString('token')}',
+      },
+      body: json.encode(carro.toJson()),
+    );
 
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
