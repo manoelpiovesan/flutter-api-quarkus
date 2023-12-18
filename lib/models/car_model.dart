@@ -1,22 +1,19 @@
 class Carro {
-  final int id;
-  final int ano;
-  final String nome;
-  final String marca;
+  int? id;
+  int ano = -1;
+  String nome = '';
+  String marca = '';
 
-  Carro({required this.id, required this.ano, required this.nome, required this.marca});
+  Carro();
 
-  factory Carro.fromJson(Map<String, dynamic> json) {
-    return Carro(
-      id: json['id'],
-      ano: json['ano'],
-      nome: json['nome'],
-      marca: json['marca'],
-    );
-  }
+  Carro.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        ano = json['ano'],
+        nome = json['nome'],
+        marca = json['marca'];
 
   Map<String, dynamic> toJson() {
-    return {
+    return <String, dynamic>{
       'id': id,
       'ano': ano,
       'nome': nome,
